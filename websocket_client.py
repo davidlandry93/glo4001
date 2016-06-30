@@ -16,7 +16,7 @@ class Sensors(Enum):
 class HokuyoSensor:
     TOPIC = '/scan'
 
-    def __init__(self, buffer_size=50):
+    def __init__(self, buffer_size=500):
         self.buffer_size = buffer_size
         self.buffer = collections.deque([], maxlen=buffer_size)
 
@@ -25,14 +25,19 @@ class HokuyoSensor:
                                                 'topic': '/scan'})
 
     def on_message(self, message):
-
         self.buffer.append(message)
 
-    def read_data(self):
+    def read_all_data(self):
         old_buffer = self.buffer
         self.buffer = collections.deque([], maxlen=self.buffer_size)
 
         return old_buffer
+
+    def read_data(self):
+        try:
+            return self.buffer.popleft()
+        except IndexError:
+            raise IndexError('Le buffeur du capteur est vide')
 
 
 def on_error(ws, error):
