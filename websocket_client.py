@@ -24,21 +24,31 @@ class HokuyoSensor:
                                                 'type': 'sensor_msgs/LaserScan',
                                                 'topic': '/scan'})
 
+        
     def on_message(self, message):
         self.buffer.append(message)
 
+        
     def read_all_data(self):
         old_buffer = self.buffer
         self.buffer = collections.deque([], maxlen=self.buffer_size)
 
         return old_buffer
 
+    
     def read_data(self):
         try:
             return self.buffer.popleft()
         except IndexError:
             raise IndexError('Le buffeur du capteur est vide')
-
+        
+        
+    def peek_most_recent_data(self):
+        try:
+            return self.buffer[len(self.buffer) - 1]
+        except IndexError:
+            raise IndexError('Le buffeur du capteur est vide')
+            
 
 def on_error(ws, error):
     print(error)
@@ -95,3 +105,7 @@ class Robot:
 
     def read_sensor_data(self, sensor):
         return self.listened_sensors[self.SENSORS[sensor].TOPIC].read_data()
+    
+    
+    def peek_most_recent_data(self, sensor):
+        return self.listened_sensors[self.SENSORS[sensor].TOPIC].peek_most_recent_data()
