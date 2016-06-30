@@ -105,6 +105,10 @@ class Robot:
 
     def read_sensor_data(self, sensor):
         return self.listened_sensors[self.SENSORS[sensor].TOPIC].read_data()
+
+
+    def read_all_sensor_data(self, sensor):
+        return self.listened_sensors[self.SENSORS[sensor].TOPIC].read_all_data()
     
     
     def peek_most_recent_data(self, sensor):
