@@ -6,9 +6,8 @@ from matplotlib import animation
 
 class Visualizer:
     
-    def __init__(self, robot):
-        self.robot = robot
-        #self.animation_step_millisec = math.floor(1000 / self.sensor.sample_rate)
+    def __init__(self, sensor):
+        self.sensor = sensor
         
     
     def plot_data(self):
@@ -19,13 +18,10 @@ class Visualizer:
         ax.set_rmin(0.0)
         ax.set_theta_zero_location('N')
         
-        last_data = self.robot.read_sensor_data(Sensors.hokuyo)['msg']
+        last_data = self.sensor.read_data()
         ranges = np.array(last_data['ranges'])
         angles = np.arange(last_data['angle_min'], last_data['angle_max'] + last_data['angle_increment'], 
                            last_data['angle_increment'])
-        
-        ranges = ranges.astype('float32')
-        
         
         scatter_plot = ax.scatter(angles, ranges, color='b', s=2, animated=True)
         
@@ -40,12 +36,10 @@ class Visualizer:
         ax.set_rmin(0.0)
         ax.set_theta_zero_location('N')
         
-        last_data = self.robot.read_sensor_data(Sensors.hokuyo)['msg']
+        last_data = self.sensor.read_data()
         ranges = np.array(last_data['ranges'])
         angles = np.arange(last_data['angle_min'], last_data['angle_max'] + last_data['angle_increment'], 
                            last_data['angle_increment'])
-        
-        ranges = ranges.astype('float32')
         
         scatter_plot = ax.scatter(angles, ranges, color='b', s=2, animated=True)
         
@@ -54,9 +48,8 @@ class Visualizer:
             return (scatter_plot,)
         
         def animate(i):
-            last_data = self.robot.peek_most_recent_data(Sensors.hokuyo)['msg']
+            last_data = self.sensor.peek_most_recent_data()
             ranges = np.array(last_data['ranges'])
-            ranges = np.nan_to_num(ranges.astype('float32'))
             angles = np.arange(last_data['angle_min'], last_data['angle_max'] + last_data['angle_increment'], 
                                last_data['angle_increment'])
             

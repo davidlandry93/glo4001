@@ -53,9 +53,10 @@ class HokuyoSensor(Sensor):
 
 
     def parse_message(self, message):
-        return {'angle_min': message['msg']['angle_min'],
-                'angle_max': message['msg']['angle_max'],
-                'range_min': message['msg']['range_min'],
-                'range_max': message['msg']['range_max'],
-                'ranges'   : np.array(message['msg']['ranges']).astype(np.float32)
+        return {'angle_min':       message['msg']['angle_min'],
+                'angle_max':       message['msg']['angle_max'],
+                'angle_increment': message['msg']['angle_increment'],
+                'range_min':       message['msg']['range_min'],
+                'range_max':       message['msg']['range_max'],
+                'ranges'   :       np.nan_to_num(np.array(message['msg']['ranges']).astype(np.float32))
                 }
