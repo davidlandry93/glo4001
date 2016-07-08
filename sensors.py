@@ -28,7 +28,7 @@ class Sensor:
             raise IndexError('Le buffeur du capteur est vide')
 
 
-    def peek_most_recent_data(self):
+    def peek_data(self):
         try:
             return self.buffer[len(self.buffer) - 1]
         except IndexError:
@@ -60,3 +60,17 @@ class HokuyoSensor(Sensor):
                 'range_max':       message['msg']['range_max'],
                 'ranges'   :       np.nan_to_num(np.array(message['msg']['ranges']).astype(np.float32))
                 }
+
+
+
+class SharpSensor(Sensor):
+    TOPIC   = '/mobile_base/sensors/core'
+    MESSAGE_TYPE = 'kobuki_msgs/SensorState'
+    SAMPLE_RATE = 50
+
+    def __init__(self, analogInputId, buffer_size=10000):
+        super().__init__(buffer_size)
+        self.analogInputId = analogInputId
+
+    def parse_message(self, message):
+        return {'signal_strength':  message['msg']['analog_input'][self.analogInputId] }

@@ -18,7 +18,7 @@ class Visualizer:
         ax.set_rmin(0.0)
         ax.set_theta_zero_location('N')
         
-        last_data = self.sensor.read_data()
+        last_data = self.sensor.peek_data()
         ranges = np.array(last_data['ranges'])
         angles = np.arange(last_data['angle_min'], last_data['angle_max'] + last_data['angle_increment'], 
                            last_data['angle_increment'])

@@ -9,7 +9,7 @@ class Robot:
 
     def __init__(self, robot_ip, port=9090):
         self.ws = None
-        self.listened_sensors = {}
+        self.sensors = {}
         self.robot_url = 'ws://' + robot_ip + ':' + str(port)
 
         try:
@@ -28,19 +28,25 @@ class Robot:
         _thread.start_new_thread(self.ws.run_forever, ())
 
 
-    def listen_to(self, sensor):
+    def add_sensor(self, sensor):
         self.ws.send(sensor.subscription_message)
-        self.listened_sensors[sensor.TOPIC] = sensor
+
+        if sensor.TOPIC in self.sensors:
+            self.sensors[sensor.TOPIC].append(sensor)
+        else:
+            self.sensors[sensor.TOPIC] = [sensor]
 
 
     def disconnect(self):
         self.ws.keep_running = False
 
 
-    def _on_message(self, _, message):
-        message_dictionary = json.loads(message)
-        message_topic = message_dictionary['topic']
-        self.listened_sensors[message_topic].on_message(message_dictionary)
+    def _on_message(self, _, raw_message):
+        parsed_message = json.loads(raw_message)
+        message_topic = parsed_message['topic']
+
+        if message_topic in self.sensors:
+            [s.on_message(parsed_message) for s in self.sensors[message_topic]]
 
 
     def _on_open(self, *args, **kargs):
