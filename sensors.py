@@ -1,5 +1,5 @@
 import numpy as np
-import json
+import json, base64
 import collections
 
 
@@ -74,3 +74,23 @@ class SharpSensor(Sensor):
 
     def parse_message(self, message):
         return {'signal_strength':  message['msg']['analog_input'][self.analogInputId] }
+
+
+
+class KinectRGBSensor(Sensor):
+    #TOPIC        = '/camera/rgb/image_color/compressed'
+    TOPIC = '/camera/rgb/image_color'
+    MESSAGE_TYPE = 'sensor_msgs/Image'
+    SAMPLE_RATE  = 30
+
+    def __init__(self, buffer_size=50):
+        super().__init__(buffer_size)
+
+    def parse_message(self, message):
+        npimg = np.frombuffer(base64.decodebytes(bytes(message['msg']['data'], encoding='UTF-8')), dtype=np.uint8)
+        npimg.shape
+        npimg = npimg.reshape((480*640,3))
+        npimg = np.fliplr(npimg)
+        npimg = npimg.reshape((480, 640, 3))
+
+        return npimg
