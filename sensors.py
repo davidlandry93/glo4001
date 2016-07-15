@@ -1,16 +1,19 @@
+
+from io import BytesIO
 import numpy as np
 import json, base64
 import collections
+from PIL import Image
+
 
 
 class Sensor:
     def __init__(self, buffer_size):
         self.buffer_size = buffer_size
         self.buffer = collections.deque([], maxlen=buffer_size)
-        self.subscription_message = json.dumps({'op': 'subscribe',
-                                                'type': self.MESSAGE_TYPE,
-                                                'topic': self.TOPIC
-                                                })
+        self.subscription_message = {'op': 'subscribe',
+                                     'type': self.MESSAGE_TYPE,
+                                     'topic': self.TOPIC }
 
 
     def parse_message(self, message):
@@ -78,19 +81,28 @@ class SharpSensor(Sensor):
 
 
 class KinectRGBSensor(Sensor):
-    #TOPIC        = '/camera/rgb/image_color/compressed'
-    TOPIC = '/camera/rgb/image_color'
-    MESSAGE_TYPE = 'sensor_msgs/Image'
+    TOPIC        = '/camera/rgb/image_color/compressed'
+    #TOPIC = '/camera/rgb/image_color'
+    MESSAGE_TYPE = 'sensor_msgs/CompressedImage'
     SAMPLE_RATE  = 30
 
-    def __init__(self, buffer_size=50):
+    def __init__(self, buffer_size=30):
         super().__init__(buffer_size)
 
-    def parse_message(self, message):
-        npimg = np.frombuffer(base64.decodebytes(bytes(message['msg']['data'], encoding='UTF-8')), dtype=np.uint8)
-        npimg.shape
-        npimg = npimg.reshape((480*640,3))
-        npimg = np.fliplr(npimg)
-        npimg = npimg.reshape((480, 640, 3))
+    # Not compressed version
+    # def parse_message(self, message):
+    #     npimg = np.frombuffer(
+    #         base64.decodebytes(
+    #             bytes(message['msg']['data'], encoding='UTF-8')), dtype=np.uint8)
+    #     npimg = npimg.reshape((480*640,3))
+    #     npimg = np.fliplr(npimg)
+    #     npimg = npimg.reshape((480, 640, 3))
 
-        return npimg
+    #     return npimg
+
+    def parse_message(self, message):
+        image_data = message['msg']['data']
+        decompressed_image = Image.open(BytesIO(base64.b64decode(image_data)))
+
+        return decompressed_image
+

@@ -29,7 +29,7 @@ class Robot:
 
 
     def add_sensor(self, sensor):
-        self.ws.send(sensor.subscription_message)
+        self.ws.send(json.dumps(sensor.subscription_message))
 
         if sensor.TOPIC in self.sensors:
             self.sensors[sensor.TOPIC].append(sensor)
