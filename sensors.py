@@ -1,7 +1,7 @@
 
 from io import BytesIO
 import numpy as np
-import json, base64
+import base64
 import collections
 from PIL import Image
 
@@ -82,24 +82,13 @@ class SharpSensor(Sensor):
 
 class KinectRGBSensor(Sensor):
     TOPIC        = '/camera/rgb/image_color/compressed'
-    #TOPIC = '/camera/rgb/image_color'
     MESSAGE_TYPE = 'sensor_msgs/CompressedImage'
     SAMPLE_RATE  = 30
 
     def __init__(self, buffer_size=30):
         super().__init__(buffer_size)
 
-    # Not compressed version
-    # def parse_message(self, message):
-    #     npimg = np.frombuffer(
-    #         base64.decodebytes(
-    #             bytes(message['msg']['data'], encoding='UTF-8')), dtype=np.uint8)
-    #     npimg = npimg.reshape((480*640,3))
-    #     npimg = np.fliplr(npimg)
-    #     npimg = npimg.reshape((480, 640, 3))
-
-    #     return npimg
-
+        
     def parse_message(self, message):
         image_data = message['msg']['data']
         decompressed_image = Image.open(BytesIO(base64.b64decode(image_data)))
