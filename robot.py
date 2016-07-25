@@ -3,12 +3,16 @@ import json
 import _thread
 import urllib.parse
 import websocket
-from sensors import Sensor
+import time
+from commands import CommandPublisher
+
+
 
 class Robot:
 
     def __init__(self, robot_ip, port=9090):
         self.ws = None
+        self.publisher = None
         self.sensors = {}
         self.robot_url = 'ws://' + robot_ip + ':' + str(port)
 
@@ -35,6 +39,13 @@ class Robot:
             self.sensors[sensor.TOPIC].append(sensor)
         else:
             self.sensors[sensor.TOPIC] = [sensor]
+            
+            
+    def send_command(self, command):
+        if self.publisher:
+            self.publisher.stop_publishing()
+        self.publisher = CommandPublisher()
+        self.publisher.start_publishing(self.ws.send, command)
 
 
     def disconnect(self):

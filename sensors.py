@@ -42,7 +42,7 @@ class Sensor:
         old_buffer = self.buffer
         self.buffer = collections.deque([], maxlen=self.buffer_size)
         return old_buffer
-
+        
 
 
 class HokuyoSensor(Sensor):
