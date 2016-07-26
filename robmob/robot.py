@@ -4,7 +4,7 @@ import _thread
 import urllib.parse
 import websocket
 import time
-from commands import CommandPublisher
+from robmob.commands import CommandPublisher
 
 
 

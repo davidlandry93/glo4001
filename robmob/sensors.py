@@ -38,10 +38,14 @@ class Sensor:
             raise IndexError('Le buffeur du capteur est vide')
 
 
-    def read_all_data(self):
+    def read_buffer(self):
         old_buffer = self.buffer
         self.buffer = collections.deque([], maxlen=self.buffer_size)
-        return old_buffer
+        return self.format_buffer_numpy(old_buffer)
+    
+    
+    def format_buffer_numpy(self, buf):
+        return buf
         
 
 
@@ -71,12 +75,23 @@ class SharpSensor(Sensor):
     MESSAGE_TYPE = 'kobuki_msgs/SensorState'
     SAMPLE_RATE = 50
 
-    def __init__(self, analogInputId, buffer_size=10000):
+    def __init__(self, analog_input_id, buffer_size=100):
+        """
+        There are two Sharp sensors on the robot. The analog_input_id 0 is the long range sensor 
+        and the analog_input_id 1 is the short range sensor.
+        """
         super().__init__(buffer_size)
-        self.analogInputId = analogInputId
+        self.analog_input_id = analog_input_id
 
+        
     def parse_message(self, message):
-        return {'signal_strength':  message['msg']['analog_input'][self.analogInputId] }
+        return {'signal_strength':  message['msg']['analog_input'][self.analog_input_id]}
+    
+    
+    def format_buffer_numpy(self, buf):
+        strengths =  np.asarray([data['signal_strength'] for data in buf])
+        signal_to_volts = np.vectorize(lambda x: x / 4096 * 3.3)
+        return signal_to_volts(strengths)
 
 
 
