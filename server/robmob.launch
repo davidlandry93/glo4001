@@ -1,0 +1,6 @@
+<launch>
+  <include file="$(find kobuki_node)/launch/minimal.launch" />
+  <include file="$(find rosbridge_server)/launch/rosbridge_websocket.launch" />
+  <include file="$(find hokuyo_node)/hokuyo_test.launch" />
+  <include file="$(find freenect_launch)/launch/freenect.launch" />
+</launch>

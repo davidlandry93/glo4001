@@ -9,9 +9,6 @@ RUN apt-get update && apt-get install -y \
     ros-indigo-rosbridge-suite \
     && rm -rf /var/lib/apt/lists/
 
-# Add the user to the dialout group so that it can speak to the tty.
-RUN usermod -aG dialout $USER
-
 # This needs to be run once so that the computer can speak to the kobuki.
 RUN rosrun kobuki_ftdi create_udev_rules
 
