@@ -45,7 +45,7 @@ class Sensor:
     
     
     def format_buffer_numpy(self, buf):
-        return buf
+        return np.asarray(buf)
         
 
 
@@ -85,14 +85,8 @@ class SharpSensor(Sensor):
 
         
     def parse_message(self, message):
-        return {'signal_strength':  message['msg']['analog_input'][self.analog_input_id]}
+        return float(message['msg']['analog_input'][self.analog_input_id]) / 4096 * 3.3
     
-    
-    def format_buffer_numpy(self, buf):
-        strengths =  np.asarray([data['signal_strength'] for data in buf])
-        signal_to_volts = np.vectorize(lambda x: x / 4096 * 3.3)
-        return signal_to_volts(strengths)
-
 
 
 class KinectRGBSensor(Sensor):
