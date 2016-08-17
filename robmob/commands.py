@@ -5,7 +5,7 @@ import json
 
 DO_NOT_SEND_REPEATEDLY_FLAG = None
 LINEAR_SPEED = 0.12
-ANGULAR_SPEED = 0.6 
+ANGULAR_SPEED = 1.0 
 
 class RosTwistMessage:
     
