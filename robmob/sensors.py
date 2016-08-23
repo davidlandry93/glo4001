@@ -1,8 +1,10 @@
 
 from io import BytesIO
+import math
 import numpy as np
 import base64
 import collections
+import time
 from PIL import Image
 
 
@@ -11,6 +13,7 @@ class Sensor:
     def __init__(self, buffer_size):
         self.buffer_size = buffer_size
         self.buffer = collections.deque([], maxlen=buffer_size)
+        self.continuous_buffer = None
         self.subscription_message = {'op': 'subscribe',
                                      'type': self.MESSAGE_TYPE,
                                      'topic': self.TOPIC }
@@ -21,7 +24,10 @@ class Sensor:
 
 
     def on_message(self, message):
-        self.buffer.append(self.parse_message(message))
+        parsed_message = self.parse_message(message)
+        self.buffer.append(parsed_message)
+        if self.continuous_buffer != None:
+            self.continuous_buffer.append(parsed_message)
 
 
     def read_data(self):
@@ -43,6 +49,13 @@ class Sensor:
         self.buffer = collections.deque([], maxlen=self.buffer_size)
         return self.format_buffer_numpy(old_buffer)
     
+    
+    def sample_data_for_x_sec(self, x):
+        self.continuous_buffer = []
+        time.sleep(x)
+        samples, self.continuous_buffer = self.continuous_buffer, None
+        return self.format_buffer_numpy(samples)
+        
     
     def format_buffer_numpy(self, buf):
         return np.asarray(buf)
@@ -71,9 +84,9 @@ class HokuyoSensor(Sensor):
 
 
 class SharpSensor(Sensor):
-    TOPIC   = '/mobile_base/sensors/core'
+    TOPIC        = '/mobile_base/sensors/core'
     MESSAGE_TYPE = 'kobuki_msgs/SensorState'
-    SAMPLE_RATE = 50
+    SAMPLE_RATE  = 50
 
     def __init__(self, analog_input_id, buffer_size=100):
         """
@@ -87,8 +100,31 @@ class SharpSensor(Sensor):
     def parse_message(self, message):
         return float(message['msg']['analog_input'][self.analog_input_id]) / 4096 * 3.3
     
+    
+    
+class GyroSensor(Sensor):
+    TOPIC        = '/mobile_base/sensors/imu_data_raw'
+    MESSAGE_TYPE = 'sensor_msgs/Imu'
+    SAMPLE_RATE  = 108
+    
+    
+    def __init__(self, buffer_size=200):
+        super().__init__(buffer_size)
+        
+        
+    def parse_message(self, message):
+        return {
+            'x': math.degrees(message['msg']['angular_velocity']['x']),
+            'y': math.degrees(message['msg']['angular_velocity']['y']),
+            'z': math.degrees(message['msg']['angular_velocity']['z'])
+        }
+    
+    
+    def format_buffer_numpy(self, buf):
+        return np.asarray(list(map((lambda m: [m['x'], m['y'], m['z']]), buf)))
+    
 
-
+    
 class KinectRGBSensor(Sensor):
     TOPIC        = '/camera/rgb/image_color/compressed'
     MESSAGE_TYPE = 'sensor_msgs/CompressedImage'
