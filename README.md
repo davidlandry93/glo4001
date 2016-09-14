@@ -1,8 +1,8 @@
 
 # Laboratoires
 
-Cours GLO-4001 et IFT-7021. En équipe de deux ou plus. Matériel requis: un ordinateur portable
-par équipe (pour la connexion wi-fi), une plate-forme robotique par équipe.
+Cours GLO-4001 et GLO-7021. En équipe de deux ou plus. Matériel requis: un ordinateur portable
+par équipe (pour la connexion wifi), une plate-forme robotique par équipe.
 
 <!-- markdown-toc start - Don't edit this section. Run M-x markdown-toc-generate-toc again -->
 **Table des matières**
@@ -19,6 +19,7 @@ par équipe (pour la connexion wi-fi), une plate-forme robotique par équipe.
         - [Téléchargement du code du cours](#téléchargement-du-code-du-cours)
         - [Installation des librairies nécessaires](#installation-des-librairies-nécessaires)
         - [Lancer jupyter](#lancer-jupyter-windows)
+- [Lancer un laboratoire](#lancer-un-laboratoire)
 
 <!-- markdown-toc end -->
 
@@ -44,16 +45,19 @@ Votre ortinateur de bord communique avec la `kobuki` à travers un logiciel nomm
 
 Nous utiliserons le code python à travers un *jupyter notebook*. Jupyter est un
 environnement interactif qui permet d'entremêler du code, le résultat de son
-exécution et du texte. Voici un exemple de notebook jupyter à l'oeuvre.
+exécution et du texte. Voici un exemple de *jupyter notebook* à l'oeuvre.
 
 <img src="doc/jupyterexample.png"></img>
 
 ## Installation
 
-Dans cette section nous verrons comment installer jupyter et la librairie
-`robmob` sur votre ordinateur.
+Dans cette section nous verrons comment installer *jupyter* et la librairie
+*robmob* sur votre ordinateur.
 
-### Linux (ubuntu)
+### Linux (Ubuntu)
+
+Les instructions qui suivent sont spécifiques à Ubuntu mais devraient bien se 
+généraliser à d'autres distributions (et peut-être même MacOS).
 
 #### Création d'un environnement virtuel python3
 
@@ -87,7 +91,7 @@ Dans un autre dossier, lancez la commande
 $ git clone https://github.com/davidlandry93/glo4001
 ```
 
-Cette commande téléchargera le code nécessaires aux laboratoires. Il contient aussi un fichier
+Cette commande téléchargera le code nécessaire aux laboratoires. Il contient aussi un fichier
 `requirements.txt` qui contient la liste des libraries python dont on a besoin pour exécuter
 le code fourni. Heureusement, on peut les installer automatiquement avec une commande. Assurez-vous
 d'avoir activé l'environnement virtuel avant de lancer cette commande.
@@ -99,14 +103,16 @@ $ pip install -r requirements.txt
 
 #### Lancer jupyter (linux)
 
-Si tout a réussi, votre environnement virtuel contient désormais toutes les librairies nécessaires.
-Vous pouvez le tester en tentant de lancer le notebook jupyter (toujours avec l'environnement virtel activé). Lancez cette commande à partir de l'intérieur du repo `glo4001`.
+Si tout a réussi, votre environnement virtuel contient désormais toutes les
+librairies nécessaires. Vous pouvez le tester en tentant de lancer le *jupyter
+notebook* (toujours avec l'environnement virtel activé). Lancez cette commande à
+partir de l'intérieur du repo `glo4001`.
 
 ```
 $ jupyter notebook
 ```
 
-Avec un peu de chance, votre navigateur web devrait ouvrir un nouvel onglet pointant sur le notebook jupyter. Bien joué! Maintenant, vous pouvez ouvrir le fichier `Laboratoire 0.ipynb` et vous
+Avec un peu de chance, votre navigateur web devrait ouvrir un nouvel onglet pointant sur le notebook *jupyter*. Bien joué! Maintenant, vous pouvez ouvrir le fichier `Laboratoire 0.ipynb` et vous
 connecter à votre robot.
 
 ### Windows
@@ -119,7 +125,7 @@ utilisées dans les laboratoires. Assurez vous de vous procurer la version *Pyth
 
 Installez anaconda, en conservant les options d'installation par défaut, qui sont
 
-- Installation locale (single user).
+- Installation locale (single user)
 - Ajout de anaconda au *PATH*
 - Sélection de anaconda comme python 3.5 par défaut
 
@@ -131,7 +137,10 @@ une version `.zip` de repo. Faites l'extraction du code du cours à un endroit a
 
 #### Installation des librairies nécessaires
 
-Avec le menu démarrer, ouvrez le logiciel *anaconda prompt*. Utilisez les commandes `DIR` et `CHDIR` pour naviguer jusqu'au dossier contenant le code du cours. À partir de là, lancez la commande suivante. Elle devrait installer les librairies nécessaires à l'exécution du code du cours.
+Avec le menu démarrer, ouvrez le logiciel *anaconda prompt*. Utilisez les
+commandes `DIR` et `CHDIR` pour naviguer jusqu'au dossier contenant le code du
+cours. À partir de là, lancez la commande suivante. Elle devrait installer les
+librairies nécessaires à l'exécution du code du cours.
 
 ```
 pip install -r requirements.txt
@@ -145,6 +154,9 @@ Depuis la *anaconda prompt*, allez dans le dossier contenant le code du cours, p
 jupyter notebook
 ```
 
-Ouvrez le fichier *Laboratoire 0.ipynb*. La suite des instructions, incluant comment interagir avec
-le robot, s'y trouve.
     
+## Lancer un laboratoire
+
+Dans le *jupyter notebook*, ouvrez le fichier *Laboratoire 0.ipynb*. La suite des
+instructions, incluant comment interagir avec le robot, s'y trouve. Bonne
+chance!
