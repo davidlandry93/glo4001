@@ -66,7 +66,7 @@ contient les logiciels nécessaires pour faire les laboratoires. Assurez-vous
 d'abord d'avoir les paquets suivants.
 
 ```
-$ sudo apt-get install python-virtualenv git
+$ sudo apt-get install python-virtualenv git libpng_devel libjpeg-dev freetype_devel
 ```
 
 Ensuite, créez un environnement virtuel avec la commande suivante.
