@@ -41,7 +41,7 @@ en trouverez un résumé dans le schéma suivant.
 
 <img src="doc/software_architecture.png" width="800" ></img>
 
-Votre ortinateur de bord communique avec la `kobuki` à travers un logiciel nommé ROS (pour *Robot Operating System*). Il nous suffit donc de parler à l'ordinateur de bord avec une connexion websocket, et le tour est joué.
+Votre ordinateur de bord communique avec la `kobuki` à travers un logiciel nommé ROS (pour *Robot Operating System*). Il nous suffit donc de parler à l'ordinateur de bord avec une connexion websocket, et le tour est joué.
 
 Nous utiliserons le code python à travers un *jupyter notebook*. Jupyter est un
 environnement interactif qui permet d'entremêler du code, le résultat de son
@@ -132,7 +132,7 @@ Installez anaconda, en conservant les options d'installation par défaut, qui so
 #### Téléchargement du code du cours
 
 Visitez ensuite [cette adresse](https://github.com/davidlandry93/glo4001) et téléchargez
-le code du cours. En appuyant sur le bouton *clone or download*, vous pourrez télégarger
+le code du cours. En appuyant sur le bouton *clone or download*, vous pourrez télécharger
 une version `.zip` de repo. Faites l'extraction du code du cours à un endroit approprié.
 
 #### Installation des librairies nécessaires
