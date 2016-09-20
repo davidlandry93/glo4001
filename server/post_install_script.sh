@@ -30,6 +30,8 @@ apt-key adv --keyserver hkp://ha.pool.sks-keyservers.net --recv-key 0xB01FA116
 apt-get update
 
 apt-get install -y \
+        htop \
+        openssh-server \
         python-twisted \
         ros-indigo-ros-base \
         ros-indigo-freenect-launch \
