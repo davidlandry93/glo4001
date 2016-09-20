@@ -52,7 +52,6 @@ source /opt/ros/indigo/setup.bash
 
 # UDEV rules for the kobuki and the hokuyo.
 
-rosrun kobuki_ftdi create_udev_rules
 echo "SUBSYSTEMS==\"tty\", KERNEL==\"ttyACM[0-9]*\", ACTION==\"add\", MODE=\"0666\", GROUP=\"dialout\"" > /etc/udev/rules.d/99-hokuyo.rules
 
 
