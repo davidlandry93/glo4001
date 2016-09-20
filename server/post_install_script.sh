@@ -31,13 +31,14 @@ apt-get update
 
 apt-get install -y \
         python-twisted \
-        ros-indigo-base \
+        ros-indigo-ros-base \
         ros-indigo-freenect-launch \
         ros-indigo-hokuyo-node \
         ros-indigo-kobuki-core \
         ros-indigo-kobuki-node \
         ros-indigo-robot-upstart \
         ros-indigo-rosbridge-suite \
+        vim \
         wget
 
 rosdep init
@@ -58,4 +59,3 @@ echo "SUBSYSTEMS==\"tty\", KERNEL==\"ttyACM[0-9]*\", ACTION==\"add\", MODE=\"066
 wget -P /opt/ros/indigo/share/kobuki_node/launch \
      https://raw.githubusercontent.com/davidlandry93/glo7021/master/server/robmob.launch
 
-sudo -c "rosrun robot_upstart install kobuki_node/launch/robmob.launch" $USERNAME
