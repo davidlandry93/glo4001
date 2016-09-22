@@ -39,7 +39,7 @@ class Sensor:
 
     def peek_data(self):
         try:
-            return self.buffer[len(self.buffer) - 1]
+            return self.buffer[-1]
         except IndexError:
             raise IndexError('Le buffeur du capteur est vide')
 
@@ -48,6 +48,10 @@ class Sensor:
         old_buffer = self.buffer
         self.buffer = collections.deque([], maxlen=self.buffer_size)
         return self.format_buffer_numpy(old_buffer)
+    
+    
+    def peek_buffer(self):
+        return self.format_buffer_numpy(self.buffer)
     
     
     def sample_data_for_x_sec(self, x):
@@ -87,6 +91,9 @@ class SharpSensor(Sensor):
     TOPIC        = '/mobile_base/sensors/core'
     MESSAGE_TYPE = 'kobuki_msgs/SensorState'
     SAMPLE_RATE  = 50
+    
+    #Calibration table of the high range sharp sensor, for 15+ cm.
+    HIGH_RANGE_CALIB_TABLE =  np.asarray([[15, 2.76], [20, 2.53], [30, 1.99], [40, 1.53], [50, 1.23], [60, 1.04], [70, 0.91], [80, 0.82], [90, 0.72], [100, 0.66], [110, 0.6], [120, 0.55], [130, 0.50], [140, 0.46], [150, 0.435], [150, 0]])
 
     def __init__(self, analog_input_id, buffer_size=100):
         """
