@@ -39,8 +39,8 @@ class Robot:
             self.sensors[sensor.TOPIC].append(sensor)
         else:
             self.sensors[sensor.TOPIC] = [sensor]
-            
-            
+
+
     def send_command(self, command):
         if self.publisher:
             self.publisher.stop_publishing()

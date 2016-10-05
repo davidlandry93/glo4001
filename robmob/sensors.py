@@ -17,10 +17,8 @@ class Sensor:
         self.subscription_message = {'op': 'subscribe',
                                      'type': self.MESSAGE_TYPE,
                                      'topic': self.TOPIC }
-
-
-    def parse_message(self, message):
-        raise NotImplementedError()
+        self.unsubscribe_message = {'op': 'ubsubscribe',
+                                    'topic': self.TOPIC}
 
 
     def on_message(self, message):
