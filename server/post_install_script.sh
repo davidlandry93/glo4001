@@ -31,8 +31,10 @@ apt-get update
 
 apt-get install -y \
         htop \
+        nload \
         openssh-server \
         python-twisted \
+        ros-indigo-compressed-image-transport \
         ros-indigo-ros-base \
         ros-indigo-freenect-launch \
         ros-indigo-hokuyo-node \

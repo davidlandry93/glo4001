@@ -3,4 +3,5 @@
   <include file="$(find rosbridge_server)/launch/rosbridge_websocket.launch" />
   <include file="$(find hokuyo_node)/hokuyo_test.launch" />
   <include file="$(find freenect_launch)/launch/freenect.launch" />
+  <node name="kinect_throttle" type="throttle" pkg="topic_tools" args="/camera/rgb/image_color/compressed 5.0 /kinect_rgb_compressed" />
 </launch>

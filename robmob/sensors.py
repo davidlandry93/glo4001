@@ -133,7 +133,7 @@ class GyroSensor(Sensor):
 
     
 class KinectRGBSensor(Sensor):
-    TOPIC        = '/camera/rgb/image_color/compressed'
+    TOPIC        = '/kinect_rgb_compressed'
     MESSAGE_TYPE = 'sensor_msgs/CompressedImage'
     SAMPLE_RATE  = 30
 
