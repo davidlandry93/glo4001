@@ -133,7 +133,7 @@ class GyroSensor(Sensor):
 class KinectRGBSensor(Sensor):
     TOPIC        = '/kinect_rgb_compressed'
     MESSAGE_TYPE = 'sensor_msgs/CompressedImage'
-    SAMPLE_RATE  = 30
+    SAMPLE_RATE  = 5
 
     def __init__(self, buffer_size=30):
         super().__init__(buffer_size)
