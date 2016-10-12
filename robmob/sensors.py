@@ -17,7 +17,7 @@ class Sensor:
         self.subscription_message = {'op': 'subscribe',
                                      'type': self.MESSAGE_TYPE,
                                      'topic': self.TOPIC }
-        self.unsubscribe_message = {'op': 'ubsubscribe',
+        self.unsubscribe_message = {'op': 'unsubscribe',
                                     'topic': self.TOPIC}
 
 
@@ -145,3 +145,14 @@ class KinectRGBSensor(Sensor):
 
         return decompressed_image
 
+
+class OdometerTicksSensor(Sensor):
+    TOPIC = '/mobile_base/sensors/core'
+    MESSAGE_TYPE = 'kobuki_msgs/SensorState'
+    SAMPLE_RATE = 50
+
+    def __init__(self, buffer_size=200):
+        super().__init__(buffer_size)
+
+    def parse_message(self, message):
+        return (message['msg']['header']['stamp'], message['msg']['left_encoder'], message['msg']['right_encoder'])

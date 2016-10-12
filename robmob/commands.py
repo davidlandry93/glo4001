@@ -1,11 +1,14 @@
 import time
 import _thread
 import json
+import math
 
 
 DO_NOT_SEND_REPEATEDLY_FLAG = None
 LINEAR_SPEED = 0.12
 ANGULAR_SPEED = 1.0 
+MAX_LINEAR_SPEED = 0.4
+MAX_ANGULAR_SPEED = 120.0
 
 class RosTwistMessage:
     
@@ -72,32 +75,25 @@ class ResetCommand(Command):
         super().__init__(DO_NOT_SEND_REPEATEDLY_FLAG)
         self._add_twist_message(RosTwistMessage(0, 0))
 
-        
-        
-class TurnLeftCommand(Command):
-    def __init__(self):
+class MovementCommand(Command):
+    def __init__(self, linear, angular):
         super().__init__()
-        self._add_twist_message(RosTwistMessage(0, ANGULAR_SPEED))
+        if abs(linear) > MAX_LINEAR_SPEED:
+            raise ValueError('La vitesse linéaire fournie est trop grande. La vitesse de rotation maximale du robot est {}'.format(MAX_ANGULAR_SPEED))
+        if abs(angular) > MAX_ANGULAR_SPEED:
+            raise ValueError('La vitesse fournie est trop grande. La vitesse maximale du robot est {}'.format(MAX_LINEAR_SPEED))
+            
+        self._add_twist_message(RosTwistMessage(linear, angular))
         
         
-        
-class TurnRightCommand(Command):
-    def __init__(self):
-        super().__init__()
-        self._add_twist_message(RosTwistMessage(0, -ANGULAR_SPEED))
+class RotationCommand(MovementCommand):
+    def __init__(self, speed):
+        super().__init__(0.0, speed)
         
         
-        
-class MoveForwardCommand(Command):
-    def __init__(self, boost=False):
-        super().__init__()
-        self._add_twist_message(RosTwistMessage(3 * LINEAR_SPEED if boost else LINEAR_SPEED, 0))
-        
-        
-        
-class MoveBackwardCommand(Command):
-    def __init__(self):
-        super().__init__()
-        self._add_twist_message(RosTwistMessage(-LINEAR_SPEED, 0))
+class LinearMovementCommand(MovementCommand):
+    def __init__(self, speed):
+        super().__init__(speed, 0.0)
+
         
         

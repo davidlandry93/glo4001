@@ -4,7 +4,7 @@ import _thread
 import urllib.parse
 import websocket
 import time
-from robmob.commands import CommandPublisher
+from robmob.commands import CommandPublisher, LinearMovementCommand, ResetCommand, RotationCommand, MovementCommand
 
 
 
@@ -50,7 +50,27 @@ class Robot:
 
     def disconnect(self):
         self.ws.keep_running = False
-
+        
+    def general_movement_command(self, linear, angular, duration):
+        self.send_command(MovementCommand(linear, angular))
+        time.sleep(duration)
+        self.send_command(ResetCommand())
+        
+    def move(self, speed, duration):
+        command = LinearMovementCommand(speed)
+        
+        self.send_command(command)
+        time.sleep(duration)
+        self.send_command(ResetCommand())
+        
+    def rotate(self, speed, duration):
+        command = RotationCommand(speed)
+        
+        self.send_command(command)
+        start = time.time()
+        time.sleep(duration)
+        print(time.time() - start)
+        self.send_command(ResetCommand())
 
     def _on_message(self, _, raw_message):
         parsed_message = json.loads(raw_message)
