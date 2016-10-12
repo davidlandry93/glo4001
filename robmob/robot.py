@@ -9,6 +9,8 @@ from robmob.commands import CommandPublisher, LinearMovementCommand, ResetComman
 
 
 class Robot:
+    
+    DISTANCE_CENTER_TO_WHEEL = 0.11
 
     def __init__(self, robot_ip, port=9090):
         self.ws = None
@@ -67,9 +69,7 @@ class Robot:
         command = RotationCommand(speed)
         
         self.send_command(command)
-        start = time.time()
         time.sleep(duration)
-        print(time.time() - start)
         self.send_command(ResetCommand())
 
     def _on_message(self, _, raw_message):

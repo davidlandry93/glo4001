@@ -151,8 +151,12 @@ class OdometerTicksSensor(Sensor):
     MESSAGE_TYPE = 'kobuki_msgs/SensorState'
     SAMPLE_RATE = 50
 
+    TICK_TO_METER = 0.000085292090497737556558
+
     def __init__(self, buffer_size=200):
         super().__init__(buffer_size)
 
     def parse_message(self, message):
-        return (message['msg']['header']['stamp'], message['msg']['left_encoder'], message['msg']['right_encoder'])
+        return (message['msg']['header']['stamp']['secs'] + message['msg']['header']['stamp']['nsecs'] / 1e9, 
+                message['msg']['left_encoder'], 
+                message['msg']['right_encoder'])
