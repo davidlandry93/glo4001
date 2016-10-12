@@ -17,10 +17,8 @@ class Sensor:
         self.subscription_message = {'op': 'subscribe',
                                      'type': self.MESSAGE_TYPE,
                                      'topic': self.TOPIC }
-
-
-    def parse_message(self, message):
-        raise NotImplementedError()
+        self.unsubscribe_message = {'op': 'unsubscribe',
+                                    'topic': self.TOPIC}
 
 
     def on_message(self, message):
@@ -48,22 +46,22 @@ class Sensor:
         old_buffer = self.buffer
         self.buffer = collections.deque([], maxlen=self.buffer_size)
         return self.format_buffer_numpy(old_buffer)
-    
-    
+
+
     def peek_buffer(self):
         return self.format_buffer_numpy(self.buffer)
-    
-    
+
+
     def sample_data_for_x_sec(self, x):
         self.continuous_buffer = []
         time.sleep(x)
         samples, self.continuous_buffer = self.continuous_buffer, None
         return self.format_buffer_numpy(samples)
-        
-    
+
+
     def format_buffer_numpy(self, buf):
         return np.asarray(buf)
-        
+
 
 
 class HokuyoSensor(Sensor):
@@ -91,59 +89,70 @@ class SharpSensor(Sensor):
     TOPIC        = '/mobile_base/sensors/core'
     MESSAGE_TYPE = 'kobuki_msgs/SensorState'
     SAMPLE_RATE  = 50
-    
+
     #Calibration table of the high range sharp sensor, for 15+ cm.
     HIGH_RANGE_CALIB_TABLE =  np.asarray([[15, 2.76], [20, 2.53], [30, 1.99], [40, 1.53], [50, 1.23], [60, 1.04], [70, 0.91], [80, 0.82], [90, 0.72], [100, 0.66], [110, 0.6], [120, 0.55], [130, 0.50], [140, 0.46], [150, 0.435], [150, 0]])
 
     def __init__(self, analog_input_id, buffer_size=100):
         """
-        There are two Sharp sensors on the robot. The analog_input_id 0 is the long range sensor 
+        There are two Sharp sensors on the robot. The analog_input_id 0 is the long range sensor
         and the analog_input_id 1 is the short range sensor.
         """
         super().__init__(buffer_size)
         self.analog_input_id = analog_input_id
 
-        
+
     def parse_message(self, message):
         return float(message['msg']['analog_input'][self.analog_input_id]) / 4096 * 3.3
-    
-    
-    
+
+
+
 class GyroSensor(Sensor):
     TOPIC        = '/mobile_base/sensors/imu_data_raw'
     MESSAGE_TYPE = 'sensor_msgs/Imu'
     SAMPLE_RATE  = 108
-    
-    
+
+
     def __init__(self, buffer_size=200):
         super().__init__(buffer_size)
-        
-        
+
+
     def parse_message(self, message):
         return {
             'x': math.degrees(message['msg']['angular_velocity']['x']),
             'y': math.degrees(message['msg']['angular_velocity']['y']),
             'z': math.degrees(message['msg']['angular_velocity']['z'])
         }
-    
-    
+
+
     def format_buffer_numpy(self, buf):
         return np.asarray(list(map((lambda m: [m['x'], m['y'], m['z']]), buf)))
-    
 
-    
+
+
 class KinectRGBSensor(Sensor):
     TOPIC        = '/kinect_rgb_compressed'
     MESSAGE_TYPE = 'sensor_msgs/CompressedImage'
-    SAMPLE_RATE  = 30
+    SAMPLE_RATE  = 5
 
     def __init__(self, buffer_size=30):
         super().__init__(buffer_size)
 
-        
+
     def parse_message(self, message):
         image_data = message['msg']['data']
         decompressed_image = Image.open(BytesIO(base64.b64decode(image_data)))
 
         return decompressed_image
 
+
+class OdometerTicksSensor(Sensor):
+    TOPIC = '/mobile_base/sensors/core'
+    MESSAGE_TYPE = 'kobuki_msgs/SensorState'
+    SAMPLE_RATE = 50
+
+    def __init__(self, buffer_size=200):
+        super().__init__(buffer_size)
+
+    def parse_message(self, message):
+        return (message['msg']['header']['stamp'], message['msg']['left_encoder'], message['msg']['right_encoder'])
