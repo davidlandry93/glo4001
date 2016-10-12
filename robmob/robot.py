@@ -51,19 +51,19 @@ class Robot:
     def disconnect(self):
         self.ws.keep_running = False
         
-    def general_movement_command(self, linear, angular, duration):
+    def general_movement(self, linear, angular, duration):
         self.send_command(MovementCommand(linear, angular))
         time.sleep(duration)
         self.send_command(ResetCommand())
         
-    def move(self, speed, duration):
+    def linear_movement(self, speed, duration):
         command = LinearMovementCommand(speed)
         
         self.send_command(command)
         time.sleep(duration)
         self.send_command(ResetCommand())
         
-    def rotate(self, speed, duration):
+    def angular_movement(self, speed, duration):
         command = RotationCommand(speed)
         
         self.send_command(command)
