@@ -15,7 +15,7 @@ def circle_intersection(circle1, circle2):
     dx,dy = x2-x1,y2-y1
     d = np.sqrt(dx*dx+dy*dy)
     if d > r1+r2:
-        print('No solution because the circles are separate')
+        print("No solution because the circles don't intersect")
         return None
     if d < abs(r1-r2):
         print('No solution because one circle in contained within the other')
