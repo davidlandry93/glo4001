@@ -80,9 +80,9 @@ class MovementCommand(Command):
     def __init__(self, linear, angular):
         super().__init__()
         if abs(linear) > MAX_LINEAR_SPEED:
-            raise ValueError('La vitesse linéaire fournie est trop grande. La vitesse de rotation maximale du robot est {}'.format(MAX_ANGULAR_SPEED))
-        if abs(angular) > MAX_ANGULAR_SPEED:
             raise ValueError('La vitesse fournie est trop grande. La vitesse maximale du robot est {}'.format(MAX_LINEAR_SPEED))
+        if abs(angular) > MAX_ANGULAR_SPEED:
+            raise ValueError('La vitesse linéaire fournie est trop grande. La vitesse de rotation maximale du robot est {}'.format(MAX_ANGULAR_SPEED))
 
         self._add_twist_message(RosTwistMessage(linear, angular))
 

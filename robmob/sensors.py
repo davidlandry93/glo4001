@@ -152,11 +152,27 @@ class OdometerTicksSensor(Sensor):
     SAMPLE_RATE = 50
 
     TICK_TO_METER = 0.000085292090497737556558
-
+    ENCODER_MAX_VALUE = 65535
+    
     def __init__(self, buffer_size=200):
         super().__init__(buffer_size)
+        self.last_left = 0
+        self.last_right = 0
+        self.base_right = 0
+        self.base_left = 0
 
     def parse_message(self, message):
+        left = message['msg']['left_encoder']
+        right = message['msg']['right_encoder']
+        
+        if left < self.last_left:
+            self.base_left += self.ENCODER_MAX_VALUE
+        if right < self.last_right:
+            self.base_right += self.ENCODER_MAX_VALUE
+        
+        self.last_left = left
+        self.last_right = right
+        
         return (message['msg']['header']['stamp']['secs'] + message['msg']['header']['stamp']['nsecs'] / 1e9, 
-                message['msg']['left_encoder'], 
-                message['msg']['right_encoder'])
+                left + self.base_left, 
+                right + self.base_right)
