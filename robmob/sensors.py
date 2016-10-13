@@ -165,9 +165,14 @@ class OdometerTicksSensor(Sensor):
         left = message['msg']['left_encoder']
         right = message['msg']['right_encoder']
         
-        if left < self.last_left:
+        if left - self.last_left > 10000:
+            self.base_left -= self.ENCODER_MAX_VALUE
+        elif left - self.last_left < -10000:
             self.base_left += self.ENCODER_MAX_VALUE
-        if right < self.last_right:
+            
+        if right - self.last_right > 10000:
+            self.base_right -= self.ENCODER_MAX_VALUE
+        elif right - self.last_right < -10000:
             self.base_right += self.ENCODER_MAX_VALUE
         
         self.last_left = left
