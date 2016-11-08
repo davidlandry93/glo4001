@@ -16,7 +16,7 @@ class Sensor:
         self.continuous_buffer = None
         self.subscription_message = {'op': 'subscribe',
                                      'type': self.MESSAGE_TYPE,
-                                     'topic': self.TOPIC }
+                                     'topic': self.TOPIC}
         self.unsubscribe_message = {'op': 'unsubscribe',
                                     'topic': self.TOPIC}
 
@@ -61,6 +61,53 @@ class Sensor:
 
     def format_buffer_numpy(self, buf):
         return np.asarray(buf)
+    
+    
+    
+class LazySensor(Sensor):
+    
+    def __init__(self, buffer_size):
+        super().__init__(buffer_size)
+
+        
+    def on_message(self, raw_message):
+        self.buffer.append(raw_message)
+        if self.continuous_buffer != None:
+            self.continuous_buffer.append(raw_message)
+            
+            
+    def read_data(self):
+        try:
+            return self.parse_message(self.buffer.popleft())
+        except IndexError:
+            raise IndexError('Le buffeur du capteur est vide')
+
+
+    def peek_data(self):
+        try:
+            return self.parse_message(self.buffer[-1])
+        except IndexError:
+            raise IndexError('Le buffeur du capteur est vide')
+
+
+    def read_buffer(self):
+        old_buffer = self.buffer
+        self.buffer = collections.deque([], maxlen=self.buffer_size)
+        old_buffer_parsed = map(self.parse_message, old_buffer)
+        return self.format_buffer_numpy(old_buffer_parsed)
+
+
+    def peek_buffer(self):
+        buffer_parsed = map(self.parse_message, self.buffer)
+        return self.format_buffer_numpy(buffer_parsed)
+    
+    
+    def sample_data_for_x_sec(self, x):
+        self.continuous_buffer = []
+        time.sleep(x)
+        samples, self.continuous_buffer = self.continuous_buffer, None
+        samples_parsed = map(self.parse_message, old_buffer)
+        return self.format_buffer_numpy(samples_parsed)
 
 
 
@@ -135,16 +182,41 @@ class KinectRGBSensor(Sensor):
     MESSAGE_TYPE = 'sensor_msgs/CompressedImage'
     SAMPLE_RATE  = 5
 
-    def __init__(self, buffer_size=30):
+    
+    def __init__(self, buffer_size=10):
         super().__init__(buffer_size)
 
 
     def parse_message(self, message):
         image_data = message['msg']['data']
         decompressed_image = Image.open(BytesIO(base64.b64decode(image_data)))
-
         return decompressed_image
+    
+    
+    
+class KinectDepthSensor(Sensor):
+    TOPIC        = '/kinect_depth_compressed'
+    MESSAGE_TYPE = 'sensor_msgs/CompressedImage'
+    SAMPLE_RATE  = 5
+    
+    
+    def __init__(self, buffer_size=10):
+        super().__init__(buffer_size)
+    
+    
+    def parse_message(self, message):
+        image_data = message['msg']['data']
+        data_bytes = base64.b64decode(image_data)
+        data_numpy = np.asarray(Image.open(BytesIO(data_bytes[12:]))).astype(np.float32)
+        
+        old_err = np.seterr(divide='ignore')
+        distances_meter = 8460.134739 / data_numpy
+        distances_meter[distances_meter == np.inf] = 0.0
+        np.seterr(**old_err)
+        
+        return distances_meter
 
+    
 
 class OdometerTicksSensor(Sensor):
     TOPIC = '/mobile_base/sensors/core'
