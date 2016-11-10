@@ -61,6 +61,4 @@ echo "SUBSYSTEMS==\"tty\", KERNEL==\"ttyACM[0-9]*\", ACTION==\"add\", MODE=\"066
 
 # Configure robot_upstart
 
-wget -P /opt/ros/indigo/share/kobuki_node/launch \
-     https://raw.githubusercontent.com/davidlandry93/glo7021/master/server/robmob.launch
-
+curl -sSf http://bit.ly/glo4001launch > /opt/ros/indigo/share/kobuki_node/launch
