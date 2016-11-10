@@ -1,4 +1,3 @@
-
 from io import BytesIO
 import math
 import numpy as np
@@ -225,7 +224,7 @@ class OdometerTicksSensor(Sensor):
 
     TICK_TO_METER = 0.000085292090497737556558
     ENCODER_MAX_VALUE = 65535
-    
+
     def __init__(self, buffer_size=200):
         super().__init__(buffer_size)
         self.last_left = 0
@@ -236,20 +235,33 @@ class OdometerTicksSensor(Sensor):
     def parse_message(self, message):
         left = message['msg']['left_encoder']
         right = message['msg']['right_encoder']
-        
+
         if left - self.last_left > 10000:
             self.base_left -= self.ENCODER_MAX_VALUE
         elif left - self.last_left < -10000:
             self.base_left += self.ENCODER_MAX_VALUE
-            
+
         if right - self.last_right > 10000:
             self.base_right -= self.ENCODER_MAX_VALUE
         elif right - self.last_right < -10000:
             self.base_right += self.ENCODER_MAX_VALUE
-        
+
         self.last_left = left
         self.last_right = right
-        
-        return (message['msg']['header']['stamp']['secs'] + message['msg']['header']['stamp']['nsecs'] / 1e9, 
-                left + self.base_left, 
+
+        return (message['msg']['header']['stamp']['secs'] + message['msg']['header']['stamp']['nsecs'] / 1e9,
+                left + self.base_left,
                 right + self.base_right)
+
+class FullOdomSensor(Sensor):
+    TOPIC = '/odom'
+    MESSAGE_TYPE = 'nav_msgs/Odometry'
+    SAMPLE_RATE = 50
+
+    def __init__(self, buffer_size=200):
+        super().__init__(buffer_size)
+
+    def parse_message(self, message):
+        return (message['msg']['pose']['pose']['position']['x'],
+                message['msg']['pose']['pose']['position']['y'],
+                2*math.acos(message['msg']['pose']['pose']['orientation']['w']))
