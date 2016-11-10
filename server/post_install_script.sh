@@ -35,12 +35,14 @@ apt-get install -y \
         openssh-server \
         python-twisted \
         ros-indigo-compressed-image-transport \
-        ros-indigo-ros-base \
+        ros-indigo-depth-image-transport \
         ros-indigo-freenect-launch \
         ros-indigo-hokuyo-node \
+        ros-indigo-image-transport-plugins \
         ros-indigo-kobuki-core \
         ros-indigo-kobuki-node \
         ros-indigo-robot-upstart \
+        ros-indigo-ros-base \
         ros-indigo-rosbridge-suite \
         vim \
         wget

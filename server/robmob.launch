@@ -4,4 +4,5 @@
   <include file="$(find hokuyo_node)/hokuyo_test.launch" />
   <include file="$(find freenect_launch)/launch/freenect.launch" />
   <node name="kinect_throttle" type="throttle" pkg="topic_tools" args="messages /camera/rgb/image_color/compressed 5.0 /kinect_rgb_compressed" />
+  <node name="kinect_throttle_depth" type="throttle" pkg="topic_tools" args="messages /camera/depth/image/compressedDepth 5.0 /kinect_depth_compressed" />
 </launch>
