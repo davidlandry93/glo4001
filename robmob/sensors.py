@@ -60,53 +60,6 @@ class Sensor:
 
     def format_buffer_numpy(self, buf):
         return np.asarray(buf)
-    
-    
-    
-class LazySensor(Sensor):
-    
-    def __init__(self, buffer_size):
-        super().__init__(buffer_size)
-
-        
-    def on_message(self, raw_message):
-        self.buffer.append(raw_message)
-        if self.continuous_buffer != None:
-            self.continuous_buffer.append(raw_message)
-            
-            
-    def read_data(self):
-        try:
-            return self.parse_message(self.buffer.popleft())
-        except IndexError:
-            raise IndexError('Le buffeur du capteur est vide')
-
-
-    def peek_data(self):
-        try:
-            return self.parse_message(self.buffer[-1])
-        except IndexError:
-            raise IndexError('Le buffeur du capteur est vide')
-
-
-    def read_buffer(self):
-        old_buffer = self.buffer
-        self.buffer = collections.deque([], maxlen=self.buffer_size)
-        old_buffer_parsed = map(self.parse_message, old_buffer)
-        return self.format_buffer_numpy(old_buffer_parsed)
-
-
-    def peek_buffer(self):
-        buffer_parsed = map(self.parse_message, self.buffer)
-        return self.format_buffer_numpy(buffer_parsed)
-    
-    
-    def sample_data_for_x_sec(self, x):
-        self.continuous_buffer = []
-        time.sleep(x)
-        samples, self.continuous_buffer = self.continuous_buffer, None
-        samples_parsed = map(self.parse_message, old_buffer)
-        return self.format_buffer_numpy(samples_parsed)
 
 
 
@@ -197,6 +150,10 @@ class KinectDepthSensor(Sensor):
     TOPIC        = '/kinect_depth_compressed'
     MESSAGE_TYPE = 'sensor_msgs/CompressedImage'
     SAMPLE_RATE  = 5
+    FOV_X = 365.456
+    FOV_Y  = 365.456
+    CENTER_X = 254.878 
+    CENTER_Y = 205.395
     
     
     def __init__(self, buffer_size=10):
