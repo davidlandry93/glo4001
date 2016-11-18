@@ -4,7 +4,7 @@ import _thread
 import urllib.parse
 import websocket
 import time
-from robmob.commands import CommandPublisher, LinearMovementCommand, ResetCommand, RotationCommand, MovementCommand, MoveForwardCommand
+from robmob.commands import CommandPublisher, LinearMovementCommand, ResetCommand, RotationCommand, MovementCommand
 from robmob.sensors import FullOdomSensor
 
 
@@ -72,24 +72,22 @@ class Robot:
         return ((x - initial_x)**2 + (y - initial_y)**2)**0.5
         
         
-    def linear_movement_precise(self, distance):
+    def linear_movement_precise(self, distance, speed):
         if not self.odom:
             self.odom = FullOdomSensor()
             self.add_sensor(self.odom)
             time.sleep(0.4)
         
-        def do_command():
-            initial_x, initial_y, _ = self.odom.peek_data()
-            x, y = initial_x, initial_y
-            command = MoveForwardCommand()
-            self.send_command(command)
-            while self._moved_distance(initial_x, initial_y, x, y) < distance:
-                time.sleep(0.1)
-                x, y, _ = self.odom.peek_data()
-            self.send_command(ResetCommand())
+        breaking_distance = speed / 0.05 * 0.0025 # Very approximative
+        initial_x, initial_y, _ = self.odom.peek_data()
+        x, y = initial_x, initial_y
+        command = LinearMovementCommand(speed)
+        self.send_command(command)
+        while self._moved_distance(initial_x, initial_y, x, y) < distance - breaking_distance:
+            time.sleep(0.5 / self.odom.SAMPLE_RATE)
+            x, y, _ = self.odom.peek_data()
+        self.send_command(ResetCommand())
             
-        _thread.start_new_thread(do_command, ())
-        
         
     def angular_movement(self, speed, duration):
         command = RotationCommand(speed)
