@@ -5,6 +5,7 @@ import urllib.parse
 import websocket
 import time
 from robmob.commands import CommandPublisher, LinearMovementCommand, ResetCommand, RotationCommand, MovementCommand
+from robmob.sensors import FullOdomSensor
 
 
 
@@ -15,6 +16,7 @@ class Robot:
     def __init__(self, robot_ip, port=9090):
         self.ws = None
         self.publisher = None
+        self.odom = None
         self.sensors = {}
         self.robot_url = 'ws://' + robot_ip + ':' + str(port)
 
@@ -64,6 +66,28 @@ class Robot:
         self.send_command(command)
         time.sleep(duration)
         self.send_command(ResetCommand())
+        
+        
+    def _moved_distance(self, initial_x, initial_y, x, y):
+        return ((x - initial_x)**2 + (y - initial_y)**2)**0.5
+        
+        
+    def linear_movement_precise(self, distance, speed):
+        if not self.odom:
+            self.odom = FullOdomSensor()
+            self.add_sensor(self.odom)
+            time.sleep(0.4)
+        
+        breaking_distance = speed / 0.05 * 0.0025 # Very approximative
+        initial_x, initial_y, _ = self.odom.peek_data()
+        x, y = initial_x, initial_y
+        command = LinearMovementCommand(speed)
+        self.send_command(command)
+        while self._moved_distance(initial_x, initial_y, x, y) < distance - breaking_distance:
+            time.sleep(0.5 / self.odom.SAMPLE_RATE)
+            x, y, _ = self.odom.peek_data()
+        self.send_command(ResetCommand())
+            
         
     def angular_movement(self, speed, duration):
         command = RotationCommand(speed)
