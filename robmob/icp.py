@@ -74,7 +74,7 @@ def homogeneous_copy_of_pcl(pcl):
         copy_of_pcl = np.copy(pcl)
         return np.concatenate((copy_of_pcl.T, np.ones((1, copy_of_pcl.shape[0]))), axis=0)
 
-def icp(A, B, init_pose=None, max_iterations=20, tolerance=0.001):
+def icp(A, B, init_pose=None, max_iterations=50, tolerance=0.001):
     '''
     The Iterative Closest Point method
     Input:
@@ -110,6 +110,7 @@ def icp(A, B, init_pose=None, max_iterations=20, tolerance=0.001):
 
         # check error
         mean_error = np.average(distances)
+        print(mean_error)
         if abs(prev_error-mean_error) < tolerance:
             break
         prev_error = mean_error
