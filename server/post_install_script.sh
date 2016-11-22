@@ -29,18 +29,20 @@ apt-key adv --keyserver hkp://ha.pool.sks-keyservers.net --recv-key 0xB01FA116
 
 apt-get update
 
-apt-get install -y \
+apt-get install -y --force-yes \
         htop \
         nload \
         openssh-server \
         python-twisted \
+        ros-indigo-compressed-depth-image-transport \
         ros-indigo-compressed-image-transport \
-        ros-indigo-ros-base \
         ros-indigo-freenect-launch \
         ros-indigo-hokuyo-node \
+        ros-indigo-image-transport-plugins \
         ros-indigo-kobuki-core \
         ros-indigo-kobuki-node \
         ros-indigo-robot-upstart \
+        ros-indigo-ros-base \
         ros-indigo-rosbridge-suite \
         vim \
         wget
@@ -59,6 +61,4 @@ echo "SUBSYSTEMS==\"tty\", KERNEL==\"ttyACM[0-9]*\", ACTION==\"add\", MODE=\"066
 
 # Configure robot_upstart
 
-wget -P /opt/ros/indigo/share/kobuki_node/launch \
-     https://raw.githubusercontent.com/davidlandry93/glo7021/master/server/robmob.launch
-
+curl -sSf https://raw.githubusercontent.com/davidlandry93/glo4001/master/server/robmob.launch > /opt/ros/indigo/share/kobuki_node/launch/robmob.launch

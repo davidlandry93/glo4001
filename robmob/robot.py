@@ -109,7 +109,7 @@ class Robot:
 
 
     def _on_error(self, *args, **kargs):
-        pass
+        raise RuntimeError('Échec de la connexion au robot')
 
 
     def _on_close(self, *args, **kargs):
