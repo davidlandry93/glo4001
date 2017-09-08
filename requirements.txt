@@ -1,5 +1,5 @@
-matplotlib==1.5.1
 notebook==4.2.1
 ipywidgets==5.2.2
 websocket-client==0.37.0
 pillow==3.4.2
+matplotlib==1.5.1

@@ -139,10 +139,11 @@ une version `.zip` de repo. Faites l'extraction du code du cours à un endroit a
 
 Avec le menu démarrer, ouvrez le logiciel *anaconda prompt*. Utilisez les
 commandes `DIR` et `CHDIR` pour naviguer jusqu'au dossier contenant le code du
-cours. À partir de là, lancez la commande suivante. Elle devrait installer les
+cours. À partir de là, lancez les commandes suivantes. Elles devraient installer les
 librairies nécessaires à l'exécution du code du cours.
 
 ```
+conda install -c pillow matplotlib
 pip install -r requirements.txt
 ```
 
