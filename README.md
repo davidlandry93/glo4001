@@ -65,6 +65,14 @@ Grâce à la ligne de commande, nous allons créer un `virtualenv` python qui
 contient les logiciels nécessaires pour faire les laboratoires. Assurez-vous
 d'abord d'avoir les paquets suivants.
 
+Pour Ubuntu 16.04:
+
+```
+$ sudo apt-get install python-virtualenv git libfreetype6-dev libpng12-dev libjpeg-dev
+```
+
+Pour Ubuntu 14.04:
+
 ```
 $ sudo apt-get install python-virtualenv git libpng_devel libjpeg-dev freetype_devel
 ```
