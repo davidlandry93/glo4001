@@ -71,7 +71,7 @@ Pour Ubuntu 16.04:
 $ sudo apt-get install python-virtualenv git libfreetype6-dev libpng12-dev libjpeg-dev
 ```
 
-Pour Ubuntu 14:
+Pour Ubuntu 14.04:
 
 ```
 $ sudo apt-get install python-virtualenv git libpng_devel libjpeg-dev freetype_devel
