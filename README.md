@@ -65,6 +65,14 @@ Grâce à la ligne de commande, nous allons créer un `virtualenv` python qui
 contient les logiciels nécessaires pour faire les laboratoires. Assurez-vous
 d'abord d'avoir les paquets suivants.
 
+Pour Ubuntu 16.04:
+
+```
+$ sudo apt-get install python-virtualenv git libfreetype6-dev libpng12-dev libjpeg-dev
+```
+
+Pour Ubuntu 14.04:
+
 ```
 $ sudo apt-get install python-virtualenv git libpng_devel libjpeg-dev freetype_devel
 ```
@@ -139,10 +147,11 @@ une version `.zip` de repo. Faites l'extraction du code du cours à un endroit a
 
 Avec le menu démarrer, ouvrez le logiciel *anaconda prompt*. Utilisez les
 commandes `DIR` et `CHDIR` pour naviguer jusqu'au dossier contenant le code du
-cours. À partir de là, lancez la commande suivante. Elle devrait installer les
+cours. À partir de là, lancez les commandes suivantes. Elles devraient installer les
 librairies nécessaires à l'exécution du code du cours.
 
 ```
+conda install -c pillow matplotlib
 pip install -r requirements.txt
 ```
 
