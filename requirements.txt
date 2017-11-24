@@ -1,5 +1,5 @@
-notebook==4.2.1
-ipywidgets==5.2.2
+notebook==5.2.1
+ipywidgets==7.0.4
 websocket-client==0.37.0
 pillow==3.4.2
 scipy==0.19.1
